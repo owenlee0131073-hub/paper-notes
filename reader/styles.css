@@ -468,7 +468,6 @@ th:not(:first-child), td { text-align: right; font-variant-numeric: tabular-nums
 }
 
 .notes-empty p:first-child { margin-block-end: var(--space-2xs); color: var(--color-ink); font-weight: 650; }
-.notes-storage-hint { margin-block-start: var(--space-xs); color: var(--color-secondary-text); font-size: var(--text-xs); }
 .notes-status { color: var(--color-secondary-text); font-size: var(--text-sm); }
 .notes-status:not(:empty) { margin-block: var(--space-sm) var(--space-xs); }
 .notes-toolbar:has(#retry-notes:not([hidden])) .notes-status { color: var(--color-error); }

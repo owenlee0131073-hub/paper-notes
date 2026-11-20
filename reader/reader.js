@@ -1,11 +1,8 @@
 "use strict";
 
 document.body.classList.add("js-enabled");
-const { paper, view, noteStorage } = document.body.dataset;
+const { paper, view } = document.body.dataset;
 const endpoint = `/api/papers/${paper}/annotations`;
-const viewLinks = new Map([...document.querySelectorAll(".views a")].map(link => [
-  link.dataset.view, link.getAttribute("href"),
-]));
 const content = document.querySelector("#paper-content");
 const panel = document.querySelector("#annotations");
 const topbar = document.querySelector(".topbar");
@@ -44,52 +41,7 @@ let returnFocus = null;
 let activeNoteId = null;
 let annotationFrame = 0;
 
-function browserNoteRequest(method, id, payload) {
-  return new Promise((resolve, reject) => {
-    const open = indexedDB.open("paper-notes", 1);
-    open.onupgradeneeded = () => open.result.createObjectStore("annotations");
-    open.onerror = () => reject(new Error("브라우저 저장소에 접근할 수 없어요."));
-    open.onsuccess = () => {
-      const database = open.result;
-      const transaction = database.transaction("annotations", method === "GET" ? "readonly" : "readwrite");
-      const store = transaction.objectStore("annotations");
-      const read = store.get(paper);
-      let current;
-      let failure;
-
-      transaction.oncomplete = () => {
-        database.close();
-        resolve(current);
-      };
-      transaction.onabort = () => {
-        database.close();
-        reject(failure || new Error("브라우저에 주석을 저장하지 못했어요."));
-      };
-
-      read.onsuccess = () => {
-        current = read.result || [];
-        if (method === "GET") return;
-        const timestamp = new Date().toISOString();
-        if (method === "POST") {
-          current.push({ id: crypto.randomUUID().replaceAll("-", ""), ...payload, created_at: timestamp, updated_at: timestamp });
-        } else {
-          const index = current.findIndex(note => note.id === id);
-          if (index < 0) {
-            failure = new Error("주석을 찾을 수 없어요. 페이지를 새로고침해 주세요.");
-            transaction.abort();
-            return;
-          }
-          if (method === "DELETE") current.splice(index, 1);
-          else Object.assign(current[index], payload, { updated_at: timestamp });
-        }
-        store.put(current, paper);
-      };
-    };
-  });
-}
-
 async function requestNotes(method = "GET", id, payload) {
-  if (noteStorage === "browser") return browserNoteRequest(method, id, payload);
   const options = { method };
   if (payload) {
     options.headers = { "Content-Type": "application/json" };
@@ -151,7 +103,7 @@ function noteCard(note) {
     const target = create("a", "note-target");
     const excerpt = create("span", "note-excerpt", note.anchor.quote || note.anchor.label);
     target.append(excerpt, noteJumpIcon.content.cloneNode(true));
-    target.href = `${viewLinks.get(note.anchor.view)}#${encodeURIComponent(note.anchor.block)}`;
+    target.href = `?view=${note.anchor.view}#${note.anchor.block}`;
     if (note.anchor.view === view && document.getElementById(note.anchor.block)) {
       target.addEventListener("click", event => {
         event.preventDefault();

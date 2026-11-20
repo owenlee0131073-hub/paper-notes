@@ -1,0 +1,55 @@
+{
+  "title": "Small LLMs Are Weak Tool Learners: A Multi-LLM Agent",
+  "short_title": "α-UMi",
+  "authors": "Weizhou Shen, Chenliang Li, Hongzhan Chen, Ming Yan, Xiaojun Quan, Hehong Chen, Ji Zhang, and Fei Huang",
+  "venue": "EMNLP 2024",
+  "pages": "16658–16680",
+  "source_url": "https://aclanthology.org/2024.emnlp-main.929/",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "outline": [
+    [
+      "source-abstract",
+      "Abstract"
+    ],
+    [
+      "source-1",
+      "1 Introduction"
+    ],
+    [
+      "source-2",
+      "2 Related Works"
+    ],
+    [
+      "source-3",
+      "3 Methodology"
+    ],
+    [
+      "source-4",
+      "4 Experimental Settings"
+    ],
+    [
+      "source-5",
+      "5 Results and Analysis"
+    ],
+    [
+      "source-6",
+      "6 Conclusion"
+    ],
+    [
+      "source-7",
+      "7 Limitations"
+    ],
+    [
+      "source-8",
+      "8 Ethical Statement"
+    ],
+    [
+      "source-references",
+      "References"
+    ],
+    [
+      "source-appendix-a",
+      "Appendix"
+    ]
+  ]
+}

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="논문 원문과 정리본을 읽고 문단에 주석과 질문을 남기는 개인 읽기 공간">
+  <title>$title | 논문 노트</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/reader/styles.css">
+  <script src="/reader/reader.js" defer></script>
+</head>
+<body data-paper="$paper_id" data-view="$view">
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 3.5h13a1 1 0 0 1 1 1V20H6a2 2 0 0 1 0-4h13M6 3.5a2 2 0 0 0-2 2v12.5M8 7.5h7M8 11h5"/></symbol>
+    <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M13 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9m-6-6 6 6h-6zM8 13h7m-7 4h5"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M20 15a2 2 0 0 1-2 2H9l-5 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2ZM8 8h8m-8 4h5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  </svg>
+  <template id="note-jump-icon">
+    <svg class="icon" aria-hidden="true"><use href="#i-next"/></svg>
+  </template>
+  <a class="skip-link" href="#reading">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <div class="topbar-inner container">
+      <a class="brand" href="/" aria-label="논문 노트 보관함">
+        <span class="brand-icon"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg></span>
+        논문 노트
+      </a>
+      <div class="topbar-actions">
+        <button class="button mobile-notes" type="button" data-open-notes hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>주석
+        </button>
+        <a class="button pdf-button" href="original.pdf" target="_blank" rel="noopener">
+          <svg class="icon" aria-hidden="true"><use href="#i-pdf"/></svg>원본 PDF
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="workspace container">
+    <nav class="outline" aria-label="논문 목차">
+      <details id="outline" open>
+        <summary>목차<svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></summary>
+        <ol>$sections</ol>
+      </details>
+    </nav>
+
+    <main class="reading" id="reading">
+      <header class="paper-heading">
+        <p class="publication"><a href="$source_url" target="_blank" rel="noopener">$venue</a><span>pp. $pages</span></p>
+        <h1 lang="en">$title</h1>
+        <p class="authors" lang="en">$authors</p>
+      </header>
+
+      <nav class="views" aria-label="읽기 모드">$tabs</nav>
+      <div id="paper-content">$content</div>
+
+      <footer class="paper-footer">
+        <a href="$source_url" target="_blank" rel="noopener">ACL Anthology</a>
+        <a href="$license_url" target="_blank" rel="noopener">CC BY 4.0</a>
+        <span>영어 원문 재배치 및 그림·표 발췌</span>
+      </footer>
+    </main>
+
+    <aside class="annotations" id="annotations" aria-labelledby="annotations-title">
+      <div class="notes-toolbar" id="notes-toolbar">
+        <div class="notes-bar">
+          <div class="notes-heading">
+            <h2 id="annotations-title" tabindex="-1">주석과 질문</h2>
+            <span id="note-count" class="note-count"></span>
+          </div>
+          <button class="button new-note" type="button" id="new-note" aria-keyshortcuts="Alt+Meta+M" title="⌥⌘M" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>새 주석
+          </button>
+          <button class="button close-notes" type="button" id="close-notes" aria-label="주석 패널 닫기">닫기</button>
+        </div>
+        <p id="notes-status" class="notes-status" role="status"></p>
+        <button class="button" type="button" id="retry-notes" hidden>다시 불러오기</button>
+        <noscript>주석을 쓰려면 JavaScript를 켜 주세요.</noscript>
+      </div>
+      <div id="notes-empty" class="notes-empty" hidden>
+        <p>아직 남긴 주석이 없어요.</p>
+        <p>문장을 선택하면 해당 위치에 주석이나 질문을 남길 수 있어요.</p>
+      </div>
+      <div class="annotation-stream" id="annotation-stream">
+        <form id="note-form" class="note-form" hidden>
+          <h3 id="form-title">새 주석</h3>
+          <p id="form-anchor" class="form-anchor" hidden></p>
+          <fieldset>
+            <legend class="visually-hidden">종류</legend>
+            <label><input type="radio" name="kind" value="note" checked>주석</label>
+            <label><input type="radio" name="kind" value="question">질문</label>
+          </fieldset>
+          <div class="note-field">
+            <label for="note-body">주석 또는 질문 내용</label>
+            <textarea id="note-body" name="body" rows="4" maxlength="6000" required aria-describedby="form-error" placeholder="생각이나 질문을 적어 보세요."></textarea>
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+          </div>
+          <div class="form-actions">
+            <button class="button" type="button" id="cancel-note">취소</button>
+            <button class="button primary" type="submit" id="save-note">저장</button>
+          </div>
+        </form>
+        <ol id="note-list" class="note-list" aria-label="저장된 주석과 질문"></ol>
+      </div>
+    </aside>
+  </div>
+
+  <button class="button selection-action" id="selection-action" type="button" aria-keyshortcuts="Alt+Meta+M" title="⌥⌘M" hidden>
+    <svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>선택에 주석 달기
+    <kbd class="note-shortcut" aria-hidden="true">⌥⌘M</kbd>
+  </button>
+</body>
+</html>
